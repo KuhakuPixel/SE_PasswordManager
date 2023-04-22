@@ -7,6 +7,7 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QMessageBox,
 )
+
 import sys
 import re
 import util
@@ -92,8 +93,7 @@ class RegisterMenu(QWidget):
             "Successful",
             f"Your account has been created",
         )
-
-
+        
 app = QApplication(sys.argv)
 menu = RegisterMenu()
 menu.show()
