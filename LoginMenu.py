@@ -3,6 +3,7 @@ import sys, util, json, os
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
+from MainMenu import MainMenu
 
 class LoginData:
     def __init__(self, filename):
@@ -35,7 +36,9 @@ class LoginData:
 class LoginForm(QWidget):
     def __init__(self, data_class):
         super().__init__()
-        self.w = None
+        self.registerMenu = None
+
+        self.mainMenu = MainMenu()
         self.data_class = data_class
         self.setupGUI()
 
@@ -94,18 +97,21 @@ class LoginForm(QWidget):
             )
             return
         
-        if not util.is_login_info_valid(email, password, self.data_class):
+        if util.is_login_info_valid(email, password, self.data_class):
+            self.mainMenu.show()
+            print("show")
+            return
+        else:
             QMessageBox.critical(
                 self,
                 "Error",
                 f"Invalid email or password",
             )
-            return
     
     def OpenRegisterMenu(self, checked):
-        if self.w is None :
-            self.w = RegisterMenu(self.data_class)
-        self.w.show()
+        if self.registerMenu is None :
+            self.registerMenu = RegisterMenu(self.data_class)
+        self.registerMenu.show()
 
 class RegisterMenu(QWidget):
     def __init__(self, data_class):

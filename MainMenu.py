@@ -4,12 +4,12 @@ from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
 
-class MainMenu(QWidget):
+class MainMenu(QDialog):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("PASS VAULT")
         self.CreateTable()
-        self.show()
+        # self.show()
 
     def CreateTable(self):
         self.resize(1000,500)
@@ -52,6 +52,9 @@ class MainMenu(QWidget):
         self.vBox.addWidget(self.table)
         self.setLayout(self.vBox)
 
-app = QApplication(sys.argv)
-window = MainMenu()
-sys.exit(app.exec())
+"""
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = MainMenu()
+    sys.exit(app.exec())
+"""
