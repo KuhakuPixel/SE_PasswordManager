@@ -13,16 +13,16 @@ class MainMenu(QWidget):
 
     def CreateTable(self):
         self.resize(1000,500)
-        self.AddPassword = QPushButton('+')
-        self.SettingButton = QPushButton('+')
-        self.Premium = QPushButton('+')
+        self.AddPassword = QPushButton('Add Password')
+        self.SettingButton = QPushButton('Setting')
+        self.Premium = QPushButton('Premium')
 
         self.Search = QLineEdit()
         self.Search.setPlaceholderText("Search Password....")
 
         self.table = QTableWidget()
         self.table.setRowCount(10)
-        self.table.setColumnCount(4)
+        self.table.setColumnCount(3)
         
         for row in range(self.table.rowCount()):
             self.Button = QWidget()
@@ -33,9 +33,11 @@ class MainMenu(QWidget):
             self.buttonLayout.addWidget(self.View)
             self.buttonLayout.addWidget(self.Edit)
             self.buttonLayout.addWidget(self.Delete)
-            self.table.setCellWidget(row, 3, self.Button)
+            self.table.setCellWidget(row, 2, self.Button)
 
-        self.table.horizontalHeader().setVisible(False)
+        self.header_labels = ["Title", "Username", " "]
+        self.table.setHorizontalHeaderLabels(self.header_labels)
+
         self.table.setShowGrid(False)
         self.table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)      
