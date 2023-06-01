@@ -4,7 +4,7 @@ from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
 
-class DataClass:
+class LoginData:
     def __init__(self, filename):
         self.filename = filename
         self.data = self.load_data_from_file()
@@ -205,7 +205,7 @@ class RegisterMenu(QWidget):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
-    data_class = DataClass('data_file.json')
+    data_class = LoginData('login_info.json')
     login = LoginForm(data_class)
     login.show()
 
