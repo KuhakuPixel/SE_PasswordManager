@@ -98,7 +98,7 @@ class LoginForm(QWidget):
             return
         
         if util.is_login_info_valid(email, password, self.data_class):
-            self.mainMenu.show()
+            self.mainMenu.exec()
             print("show")
             return
         else:
@@ -111,9 +111,9 @@ class LoginForm(QWidget):
     def OpenRegisterMenu(self, checked):
         if self.registerMenu is None :
             self.registerMenu = RegisterMenu(self.data_class)
-        self.registerMenu.show()
+        self.registerMenu.exec()
 
-class RegisterMenu(QWidget):
+class RegisterMenu(QDialog):
     def __init__(self, data_class):
         super().__init__()
         self.data_class = data_class
