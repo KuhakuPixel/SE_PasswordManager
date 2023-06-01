@@ -1,13 +1,42 @@
-import sys, util
+import sys, util, json, os
 
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
 
+class DataClass:
+    def __init__(self, filename):
+        self.filename = filename
+        self.data = self.load_data_from_file()
+
+    def load_data_from_file(self):
+        if os.path.exists(self.filename):
+            with open(self.filename, 'r') as file:
+                data = json.load(file)
+            return data
+        else:
+            return []
+        
+    def add_data(self, new_data):
+        self.data.append(new_data)
+
+    def save_data_to_file(self):
+
+        # Create the file if it doesn't exist
+        if not os.path.exists(self.filename):
+            with open(self.filename, 'w'):
+                pass
+
+        with open(self.filename, 'w') as file:
+            json.dump(self.data, file)
+
+
+
 class LoginForm(QWidget):
-    def __init__(self):
+    def __init__(self, data_class):
         super().__init__()
         self.w = None
+        self.data_class = data_class
         self.setupGUI()
 
     def setupGUI(self):
@@ -64,15 +93,24 @@ class LoginForm(QWidget):
                 f"Email {email} is not valid",
             )
             return
+        
+        if not util.is_login_info_valid(email, password, self.data_class):
+            QMessageBox.critical(
+                self,
+                "Error",
+                f"Invalid email or password",
+            )
+            return
     
     def OpenRegisterMenu(self, checked):
         if self.w is None :
-            self.w = RegisterMenu()
+            self.w = RegisterMenu(self.data_class)
         self.w.show()
 
 class RegisterMenu(QWidget):
-    def __init__(self):
+    def __init__(self, data_class):
         super().__init__()
+        self.data_class = data_class
 
         self.setWindowTitle("Register Menu")
 
@@ -99,6 +137,13 @@ class RegisterMenu(QWidget):
         layout.addWidget(self.password_confirm_edit)
         layout.addWidget(self.register_button)
         self.setLayout(layout)
+
+    def add_Data(self, new_data):
+        self.data_class.add_data(new_data)
+        # Additional register logic goes here
+
+    def save_data(self):
+        self.data_class.save_data_to_file()
 
     def register(self):
         email = self.email_edit.text()
@@ -150,11 +195,18 @@ class RegisterMenu(QWidget):
             "Successful",
             f"Your account has been created",
         )
+
+        saveddata = "email :" + email + " password :" + password
+        self.data_class.add_data(saveddata)
+        self.data_class.save_data_to_file()
+
+        
     
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
-    login = LoginForm()
+    data_class = DataClass('data_file.json')
+    login = LoginForm(data_class)
     login.show()
 
     sys.exit(app.exec())
