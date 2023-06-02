@@ -1,4 +1,4 @@
-import sys, util, json, os
+import sys, util, os, jsonpickle, UserData
 
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
@@ -6,35 +6,39 @@ from PyQt6.QtWidgets import *
 from MainMenu import MainMenu
 
 class LoginData:
-    def __init__(self, filename):
+    def __init__(self, filename:str):
         self.filename = filename
         self.data = self.load_data_from_file()
 
     def load_data_from_file(self):
         if os.path.exists(self.filename):
-            with open(self.filename, 'r') as file:
-                data = json.load(file)
-            return data
+          with open(self.filename, 'r') as file:
+             json_data = file.read()
+             data = jsonpickle.decode(json_data)
+          return data
         else:
-            return []
+          return []
         
-    def add_data(self, new_data):
-        self.data.append(new_data)
+    def add_data(self, new_data: UserData.UserData):
+         self.data.append(new_data)
 
     def save_data_to_file(self):
 
         # Create the file if it doesn't exist
         if not os.path.exists(self.filename):
-            with open(self.filename, 'w'):
+            with open(self.filename, 'w') as file:
                 pass
+        
+        json_data = jsonpickle.encode(self.data)
 
         with open(self.filename, 'w') as file:
-            json.dump(self.data, file)
+            file.write(json_data)
+    
 
 
 
 class LoginForm(QWidget):
-    def __init__(self, data_class):
+    def __init__(self, data_class: LoginData):
         super().__init__()
         self.registerMenu = None
 
@@ -114,7 +118,7 @@ class LoginForm(QWidget):
         self.registerMenu.exec()
 
 class RegisterMenu(QDialog):
-    def __init__(self, data_class):
+    def __init__(self, data_class: LoginData):
         super().__init__()
         self.data_class = data_class
 
@@ -143,13 +147,6 @@ class RegisterMenu(QDialog):
         layout.addWidget(self.password_confirm_edit)
         layout.addWidget(self.register_button)
         self.setLayout(layout)
-
-    def add_Data(self, new_data):
-        self.data_class.add_data(new_data)
-        # Additional register logic goes here
-
-    def save_data(self):
-        self.data_class.save_data_to_file()
 
     def register(self):
         email = self.email_edit.text()
@@ -202,8 +199,8 @@ class RegisterMenu(QDialog):
             f"Your account has been created",
         )
 
-        saveddata = "email :" + email + " password :" + password
-        self.data_class.add_data(saveddata)
+        loginInfoData = UserData.UserData(email, password)
+        self.data_class.add_data(loginInfoData)
         self.data_class.save_data_to_file()
 
         

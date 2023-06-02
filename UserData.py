@@ -15,10 +15,11 @@ class AddedUserPassword:
 
 class UserData:
     # TODO: need to also store  passwords  email that user store
-    addedUserPasswordArr = []
+    
     def __init__(self, email, password):
         self.email = email
         self.password = password
+        self.addedUserPasswordArr = []
 
     def add_password(self, addedUserPassword:AddedUserPassword):
         self.addedUserPasswordArr.append(addedUserPassword)
