@@ -5,6 +5,7 @@ from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
 from Add_Password_Menu import PasswordMenuType, PasswordMenu
 
+
 class MainMenu(QDialog):
     def __init__(self):
         super().__init__()
@@ -22,11 +23,11 @@ class MainMenu(QDialog):
         print(userPasswordInfo.__dict__)
 
     def CreateTable(self):
-        self.resize(1000,500)
-        self.AddPassword = QPushButton('Add Password')
+        self.resize(1000, 500)
+        self.AddPassword = QPushButton("Add Password")
         self.AddPassword.clicked.connect(self.onAddPassword)
-        self.SettingButton = QPushButton('Setting')
-        self.Premium = QPushButton('Premium')
+        self.SettingButton = QPushButton("Setting")
+        self.Premium = QPushButton("Premium")
 
         self.Search = QLineEdit()
         self.Search.setPlaceholderText("Search Password....")
@@ -34,13 +35,13 @@ class MainMenu(QDialog):
         self.table = QTableWidget()
         self.table.setRowCount(10)
         self.table.setColumnCount(3)
-        
+
         for row in range(self.table.rowCount()):
             self.Button = QWidget()
             self.buttonLayout = QHBoxLayout(self.Button)
-            self.View = QPushButton('View')
-            self.Edit = QPushButton('Edit')
-            self.Delete = QPushButton('Delete')
+            self.View = QPushButton("View")
+            self.Edit = QPushButton("Edit")
+            self.Delete = QPushButton("Delete")
             self.buttonLayout.addWidget(self.View)
             self.buttonLayout.addWidget(self.Edit)
             self.buttonLayout.addWidget(self.Delete)
@@ -51,8 +52,10 @@ class MainMenu(QDialog):
 
         self.table.setShowGrid(False)
         self.table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
-        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)      
- 
+        self.table.horizontalHeader().setSectionResizeMode(
+            QHeaderView.ResizeMode.Stretch
+        )
+
         self.vBox = QVBoxLayout()
         self.hBox = QHBoxLayout()
         self.hBox.addWidget(self.AddPassword)
@@ -62,6 +65,7 @@ class MainMenu(QDialog):
         self.vBox.addLayout(self.hBox)
         self.vBox.addWidget(self.table)
         self.setLayout(self.vBox)
+
 
 """
 if __name__ == "__main__":

@@ -9,6 +9,7 @@ EMAIL_REGEX = r"""(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-
 def is_email_valid(email: str) -> bool:
     return re.match(EMAIL_REGEX, email)
 
+
 def is_login_info_valid(email, password, data_class):
     for item in data_class.data:
         stored_email = item.email

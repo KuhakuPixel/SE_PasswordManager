@@ -1,37 +1,52 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QMessageBox, QHBoxLayout,QDialog
+from PyQt6.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QLabel,
+    QLineEdit,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+    QMessageBox,
+    QHBoxLayout,
+    QDialog,
+)
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import Qt
 import random
 import string
 from enum import Enum
 from UserData import UserPasswordInfo
+
+
 class PasswordMenuType(Enum):
     EDIT = 0
     ADD = 1
 
+
 class PasswordMenu(QDialog):
     RANDOM_PASSWORD_LENGTH = 20
-    def __init__(self, passwordMenuType:PasswordMenuType):
+
+    def __init__(self, passwordMenuType: PasswordMenuType):
         super().__init__()
         self.passwordMenuType = passwordMenuType
         self.setWindowTitle("Password Menu")
 
         # Create widgets
         self.title_input = QLineEdit()
-        self.title_input.setPlaceholderText('Title')
+        self.title_input.setPlaceholderText("Title")
 
         self.username_input = QLineEdit()
-        self.username_input.setPlaceholderText('Username')
+        self.username_input.setPlaceholderText("Username")
 
         # password
         self.password_input = QLineEdit()
-        self.password_input.setPlaceholderText('Password')
+        self.password_input.setPlaceholderText("Password")
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
 
         # url
         self.url_input = QLineEdit()
-        self.url_input.setPlaceholderText('URL')
+        self.url_input.setPlaceholderText("URL")
 
         # generate
         self.generate_button = QPushButton()
@@ -65,7 +80,9 @@ class PasswordMenu(QDialog):
 
     def add_password(self):
         # Add password logic here
-        QMessageBox.information(self, "Password Successfully Added", "Password has been added successfully.")
+        QMessageBox.information(
+            self, "Password Successfully Added", "Password has been added successfully."
+        )
         self.close()
 
     def edit_password(self):
@@ -73,13 +90,13 @@ class PasswordMenu(QDialog):
         QMessageBox.information(self, "Success", "Password Successfully Edited")
         self.clear_inputs()
         self.close()
-    
+
     def exec(self) -> UserPasswordInfo:
         """
-            will return the value after dialog is closed
-            this basically override Dialog.exec() ?
-            I use similliar method like QMessageBox.exec() 
-            where it returns value
+        will return the value after dialog is closed
+        this basically override Dialog.exec() ?
+        I use similliar method like QMessageBox.exec()
+        where it returns value
         """
         super().exec()
         title = self.title_input.text()
@@ -91,13 +108,20 @@ class PasswordMenu(QDialog):
         if title == "" or username == "" or password == "" or url == "":
             return None
         else:
-            return UserPasswordInfo(password=password,title=title,url=url,username=username,)
+            return UserPasswordInfo(
+                password=password,
+                title=title,
+                url=url,
+                username=username,
+            )
 
     def generate_password(self):
         self.password_input.setText("Generated")
         generated_password = ""
         for i in range(self.RANDOM_PASSWORD_LENGTH):
-            generated_password += random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits)
+            generated_password += random.choice(
+                string.ascii_uppercase + string.ascii_lowercase + string.digits
+            )
         print("generated password: " + generated_password)
         self.password_input.setText(generated_password)
 
@@ -107,9 +131,9 @@ class PasswordMenu(QDialog):
         self.password_input.clear()
         self.url_input.clear()
 
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = PasswordMenu(passwordMenuType=PasswordMenuType.EDIT)
     window.show()
     sys.exit(app.exec())
-

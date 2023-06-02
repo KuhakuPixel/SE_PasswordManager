@@ -5,36 +5,34 @@ from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
 from MainMenu import MainMenu
 
+
 class LoginData:
-    def __init__(self, filename:str):
+    def __init__(self, filename: str):
         self.filename = filename
         self.data = self.load_data_from_file()
 
     def load_data_from_file(self):
         if os.path.exists(self.filename):
-          with open(self.filename, 'r') as file:
-             json_data = file.read()
-             data = jsonpickle.decode(json_data)
-          return data
+            with open(self.filename, "r") as file:
+                json_data = file.read()
+                data = jsonpickle.decode(json_data)
+            return data
         else:
-          return []
-        
+            return []
+
     def add_data(self, new_data: UserData.UserData):
-         self.data.append(new_data)
+        self.data.append(new_data)
 
     def save_data_to_file(self):
-
         # Create the file if it doesn't exist
         if not os.path.exists(self.filename):
-            with open(self.filename, 'w') as file:
+            with open(self.filename, "w") as file:
                 pass
-        
+
         json_data = jsonpickle.encode(self.data)
 
-        with open(self.filename, 'w') as file:
+        with open(self.filename, "w") as file:
             file.write(json_data)
-    
-
 
 
 class LoginForm(QWidget):
@@ -47,7 +45,7 @@ class LoginForm(QWidget):
         self.setupGUI()
 
     def setupGUI(self):
-        self.resize(500,300)
+        self.resize(500, 300)
         self.setWindowTitle("Login Menu")
 
         self.Title1 = QLabel("Hello, Enter Your Details To Log In ")
@@ -56,10 +54,10 @@ class LoginForm(QWidget):
         self.Password = QLineEdit()
         self.Password.setEchoMode(QLineEdit.EchoMode.Password)
         self.Password.setPlaceholderText("Password ....")
-        self.LoginButton = QPushButton('Login')
+        self.LoginButton = QPushButton("Login")
         self.LoginButton.clicked.connect(self.login)
         self.Title2 = QLabel("Don't Have An Account?")
-        self.Register = QPushButton('Register')
+        self.Register = QPushButton("Register")
         self.Register.clicked.connect(self.OpenRegisterMenu)
 
         vbox1 = QVBoxLayout()
@@ -72,7 +70,7 @@ class LoginForm(QWidget):
         vbox1.addStretch()
 
         self.setLayout(vbox1)
-    
+
     def login(self):
         email = self.Email.text()
         password = self.Password.text()
@@ -92,7 +90,7 @@ class LoginForm(QWidget):
                 f"password is empty",
             )
             return
-        
+
         if not util.is_email_valid(email):
             QMessageBox.critical(
                 self,
@@ -100,7 +98,7 @@ class LoginForm(QWidget):
                 f"Email {email} is not valid",
             )
             return
-        
+
         if util.is_login_info_valid(email, password, self.data_class):
             self.mainMenu.exec()
             print("show")
@@ -111,11 +109,12 @@ class LoginForm(QWidget):
                 "Error",
                 f"Invalid email or password",
             )
-    
+
     def OpenRegisterMenu(self, checked):
-        if self.registerMenu is None :
+        if self.registerMenu is None:
             self.registerMenu = RegisterMenu(self.data_class)
         self.registerMenu.exec()
+
 
 class RegisterMenu(QDialog):
     def __init__(self, data_class: LoginData):
@@ -205,12 +204,11 @@ class RegisterMenu(QDialog):
         # close dialog after finished
         self.close()
 
-        
-    
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
-    data_class = LoginData('login_info.json')
+    data_class = LoginData("login_info.json")
     login = LoginForm(data_class)
     login.show()
 
