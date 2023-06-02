@@ -14,7 +14,12 @@ class MainMenu(QDialog):
 
     def onAddPassword(self):
         print("Adding Password")
-        self.addPasswordMenu.exec()
+        userPasswordInfo = self.addPasswordMenu.exec()
+        if userPasswordInfo == None:
+            print("User Password info None")
+            return
+        print("Getting: ")
+        print(userPasswordInfo.__dict__)
 
     def CreateTable(self):
         self.resize(1000,500)

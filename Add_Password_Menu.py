@@ -4,8 +4,8 @@ from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import Qt
 import random
 import string
-
 from enum import Enum
+from UserData import UserPasswordInfo
 class PasswordMenuType(Enum):
     EDIT = 0
     ADD = 1
@@ -29,6 +29,7 @@ class PasswordMenu(QDialog):
         self.password_input.setPlaceholderText('Password')
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
 
+        # url
         self.url_input = QLineEdit()
         self.url_input.setPlaceholderText('URL')
 
@@ -65,7 +66,6 @@ class PasswordMenu(QDialog):
     def add_password(self):
         # Add password logic here
         QMessageBox.information(self, "Password Successfully Added", "Password has been added successfully.")
-        self.clear_inputs()
         self.close()
 
     def edit_password(self):
@@ -73,6 +73,25 @@ class PasswordMenu(QDialog):
         QMessageBox.information(self, "Success", "Password Successfully Edited")
         self.clear_inputs()
         self.close()
+    
+    def exec(self) -> UserPasswordInfo:
+        """
+            will return the value after dialog is closed
+            this basically override Dialog.exec() ?
+            I use similliar method like QMessageBox.exec() 
+            where it returns value
+        """
+        super().exec()
+        title = self.title_input.text()
+        username = self.username_input.text()
+        password = self.password_input.text()
+        url = self.url_input.text()
+
+        # if one of the input is missing, just return None
+        if title == "" or username == "" or password == "" or url == "":
+            return None
+        else:
+            return UserPasswordInfo(password=password,title=title,url=url,username=username,)
 
     def generate_password(self):
         self.password_input.setText("Generated")

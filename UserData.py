@@ -1,7 +1,7 @@
 
 
 
-class AddedUserPassword:
+class UserPasswordInfo:
     """
         To store data from Add Password
     """
@@ -21,6 +21,7 @@ class UserData:
         self.password = password
         self.addedUserPasswordArr = []
 
-    def add_password(self, addedUserPassword:AddedUserPassword):
+    def add_password(self, addedUserPassword:UserPasswordInfo):
         self.addedUserPasswordArr.append(addedUserPassword)
+
 
