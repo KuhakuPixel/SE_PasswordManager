@@ -202,6 +202,8 @@ class RegisterMenu(QDialog):
         loginInfoData = UserData.UserData(email, password)
         self.data_class.add_data(loginInfoData)
         self.data_class.save_data_to_file()
+        # close dialog after finished
+        self.close()
 
         
     
