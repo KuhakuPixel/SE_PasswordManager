@@ -66,11 +66,13 @@ class PasswordMenu(QDialog):
         # Add password logic here
         QMessageBox.information(self, "Password Successfully Added", "Password has been added successfully.")
         self.clear_inputs()
+        self.close()
 
     def edit_password(self):
         # Add password logic here
         QMessageBox.information(self, "Success", "Password Successfully Edited")
         self.clear_inputs()
+        self.close()
 
     def generate_password(self):
         self.password_input.setText("Generated")

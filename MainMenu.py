@@ -3,17 +3,23 @@ import sys, util
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
+from Add_Password_Menu import PasswordMenuType, PasswordMenu
 
 class MainMenu(QDialog):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("PASS VAULT")
         self.CreateTable()
-        # self.show()
+        self.addPasswordMenu = PasswordMenu(passwordMenuType=PasswordMenuType.ADD)
+
+    def onAddPassword(self):
+        print("Adding Password")
+        self.addPasswordMenu.exec()
 
     def CreateTable(self):
         self.resize(1000,500)
         self.AddPassword = QPushButton('Add Password')
+        self.AddPassword.clicked.connect(self.onAddPassword)
         self.SettingButton = QPushButton('Setting')
         self.Premium = QPushButton('Premium')
 
