@@ -4,6 +4,7 @@ from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
 from Add_Password_Menu import PasswordMenuType, PasswordMenu
+from UserData import UserPasswordInfo
 
 
 class MainMenu(QDialog):
@@ -11,8 +12,17 @@ class MainMenu(QDialog):
         super().__init__()
         self.setWindowTitle("PASS VAULT")
         self.CreateTable()
+        """
         for i in range(50):
-            self.TableAddItem()
+            self.TableAddItem(
+                userPasswordInfo=UserPasswordInfo(
+                    title="MyTitle",
+                    url="https://google.com",
+                    username="MyUsername",
+                    password="Nooobbb",
+                ),
+            )
+        """
         self.addPasswordMenu = PasswordMenu(passwordMenuType=PasswordMenuType.ADD)
 
     def onAddPassword(self):
@@ -21,6 +31,9 @@ class MainMenu(QDialog):
         if userPasswordInfo == None:
             print("User Password info None")
             return
+        else:
+            self.TableAddItem(userPasswordInfo=userPasswordInfo)
+
         print("Getting: ")
         print(userPasswordInfo.__dict__)
 
@@ -42,11 +55,11 @@ class MainMenu(QDialog):
         self.table.setShowGrid(False)
         # set fixed height for row
         # in order to look better :D
-        #https://stackoverflow.com/questions/19304653/how-to-set-row-height-of-qtableview
+        # https://stackoverflow.com/questions/19304653/how-to-set-row-height-of-qtableview
         # self.table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Fixed)
         self.table.verticalHeader().setDefaultSectionSize(50)
-        # =============================================== 
+        # ===============================================
         self.table.horizontalHeader().setSectionResizeMode(
             QHeaderView.ResizeMode.Stretch
         )
@@ -61,8 +74,7 @@ class MainMenu(QDialog):
         self.vBox.addWidget(self.table)
         self.setLayout(self.vBox)
 
-    def TableAddItem(self):
-
+    def TableAddItem(self, userPasswordInfo: UserPasswordInfo):
         newRowIndex = self.table.rowCount()
         self.table.insertRow(newRowIndex)
         # ============= view,edit, delete button ============
@@ -74,15 +86,17 @@ class MainMenu(QDialog):
         buttonLayout.addWidget(View)
         buttonLayout.addWidget(Edit)
         buttonLayout.addWidget(Delete)
+        # add information
+        self.table.setItem(newRowIndex, 0, QTableWidgetItem(userPasswordInfo.title))
+        self.table.setItem(newRowIndex, 1, QTableWidgetItem(userPasswordInfo.username))
         # add button
         self.table.setCellWidget(newRowIndex, 2, viewEditDeleteButton)
         # ===================================================
         # resize
-        #self.table.verticalHeaderItem(newRowIndex).
-
+        # self.table.verticalHeaderItem(newRowIndex).
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    #sys.exit(app.exec())
+    # sys.exit(app.exec())
     sys.exit(MainMenu().exec())
