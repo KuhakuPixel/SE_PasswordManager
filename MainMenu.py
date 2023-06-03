@@ -11,6 +11,8 @@ class MainMenu(QDialog):
         super().__init__()
         self.setWindowTitle("PASS VAULT")
         self.CreateTable()
+        for i in range(50):
+            self.TableAddItem()
         self.addPasswordMenu = PasswordMenu(passwordMenuType=PasswordMenuType.ADD)
 
     def onAddPassword(self):
@@ -33,25 +35,18 @@ class MainMenu(QDialog):
         self.Search.setPlaceholderText("Search Password....")
 
         self.table = QTableWidget()
-        self.table.setRowCount(10)
-        self.table.setColumnCount(3)
-
-        for row in range(self.table.rowCount()):
-            self.Button = QWidget()
-            self.buttonLayout = QHBoxLayout(self.Button)
-            self.View = QPushButton("View")
-            self.Edit = QPushButton("Edit")
-            self.Delete = QPushButton("Delete")
-            self.buttonLayout.addWidget(self.View)
-            self.buttonLayout.addWidget(self.Edit)
-            self.buttonLayout.addWidget(self.Delete)
-            self.table.setCellWidget(row, 2, self.Button)
-
         self.header_labels = ["Title", "Username", " "]
+        self.table.setColumnCount(3)
         self.table.setHorizontalHeaderLabels(self.header_labels)
 
         self.table.setShowGrid(False)
-        self.table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        # set fixed height for row
+        # in order to look better :D
+        #https://stackoverflow.com/questions/19304653/how-to-set-row-height-of-qtableview
+        # self.table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        self.table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Fixed)
+        self.table.verticalHeader().setDefaultSectionSize(50)
+        # =============================================== 
         self.table.horizontalHeader().setSectionResizeMode(
             QHeaderView.ResizeMode.Stretch
         )
@@ -66,10 +61,28 @@ class MainMenu(QDialog):
         self.vBox.addWidget(self.table)
         self.setLayout(self.vBox)
 
+    def TableAddItem(self):
 
-"""
+        newRowIndex = self.table.rowCount()
+        self.table.insertRow(newRowIndex)
+        # ============= view,edit, delete button ============
+        viewEditDeleteButton = QWidget()
+        buttonLayout = QHBoxLayout(viewEditDeleteButton)
+        View = QPushButton("View")
+        Edit = QPushButton("Edit")
+        Delete = QPushButton("Delete")
+        buttonLayout.addWidget(View)
+        buttonLayout.addWidget(Edit)
+        buttonLayout.addWidget(Delete)
+        # add button
+        self.table.setCellWidget(newRowIndex, 2, viewEditDeleteButton)
+        # ===================================================
+        # resize
+        #self.table.verticalHeaderItem(newRowIndex).
+
+
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = MainMenu()
-    sys.exit(app.exec())
-"""
+    #sys.exit(app.exec())
+    sys.exit(MainMenu().exec())
