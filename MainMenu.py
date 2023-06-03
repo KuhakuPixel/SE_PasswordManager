@@ -23,11 +23,11 @@ class MainMenu(QDialog):
                 ),
             )
         """
-        self.addPasswordMenu = PasswordMenu(passwordMenuType=PasswordMenuType.ADD)
 
     def onAddPassword(self):
         print("Adding Password")
-        userPasswordInfo = self.addPasswordMenu.exec()
+        
+        userPasswordInfo = PasswordMenu(passwordMenuType=PasswordMenuType.ADD).exec()
         if userPasswordInfo == None:
             print("User Password info None")
             return
