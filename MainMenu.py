@@ -12,7 +12,7 @@ class MainMenu(QDialog):
         super().__init__()
         self.setWindowTitle("PASS VAULT")
         self.CreateTable()
-        """
+        '''
         for i in range(50):
             self.TableAddItem(
                 userPasswordInfo=UserPasswordInfo(
@@ -22,7 +22,7 @@ class MainMenu(QDialog):
                     password="Nooobbb",
                 ),
             )
-        """
+        '''
 
     def onAddPassword(self):
         print("Adding Password")
@@ -32,10 +32,25 @@ class MainMenu(QDialog):
             print("User Password info None")
             return
         else:
-            self.TableAddItem(userPasswordInfo=userPasswordInfo)
+            self.TableAddItem(userPasswordInfo=userPasswordInfo, row = None)
 
         print("Getting: ")
         print(userPasswordInfo.__dict__)
+    
+    def onEditPassword(self, existInfo: UserPasswordInfo, row: int):
+        print("Editing Password")
+
+        userPasswordInfo = PasswordMenu(passwordMenuType=PasswordMenuType.EDIT, existingInfo=existInfo).exec()
+        if userPasswordInfo is None:
+            print("User Password info None")
+            return
+        else:
+            self.TableAddItem(userPasswordInfo=userPasswordInfo, row=row)
+
+        print("Getting: ")
+        print(userPasswordInfo.__dict__)
+
+    
 
     def CreateTable(self):
         self.resize(1000, 500)
@@ -74,15 +89,26 @@ class MainMenu(QDialog):
         self.vBox.addWidget(self.table)
         self.setLayout(self.vBox)
 
-    def TableAddItem(self, userPasswordInfo: UserPasswordInfo):
-        newRowIndex = self.table.rowCount()
-        self.table.insertRow(newRowIndex)
+    def TableAddItem(self, userPasswordInfo: UserPasswordInfo, row):
+        if row is not None and row < self.table.rowCount():
+            newRowIndex = row
+        else:
+            newRowIndex = self.table.rowCount()
+            self.table.insertRow(newRowIndex)
+        
+        # Remove the existing widgets in the row, if any
+        for column in range(self.table.columnCount()):
+            item = self.table.item(newRowIndex, column)
+            if item is not None:
+                self.table.takeItem(newRowIndex, column)
+
         # ============= view,edit, delete button ============
         viewEditDeleteButton = QWidget()
         buttonLayout = QHBoxLayout(viewEditDeleteButton)
         View = QPushButton("View")
         Edit = QPushButton("Edit")
         Delete = QPushButton("Delete")
+        Edit.clicked.connect(lambda _, info=userPasswordInfo, row=newRowIndex: self.onEditPassword(info, row))
         buttonLayout.addWidget(View)
         buttonLayout.addWidget(Edit)
         buttonLayout.addWidget(Delete)

@@ -27,8 +27,9 @@ class PasswordMenuType(Enum):
 class PasswordMenu(QDialog):
     RANDOM_PASSWORD_LENGTH = 20
 
-    def __init__(self, passwordMenuType: PasswordMenuType):
+    def __init__(self, passwordMenuType: PasswordMenuType, existingInfo: UserPasswordInfo = None):
         super().__init__()
+        self.existingInfo = existingInfo
         self.passwordMenuType = passwordMenuType
         self.setWindowTitle("Password Menu")
 
@@ -75,6 +76,10 @@ class PasswordMenu(QDialog):
 
         if passwordMenuType == PasswordMenuType.EDIT:
             layout.addWidget(self.edit_button)
+            self.title_input.setText(existingInfo.title)
+            self.username_input.setText(existingInfo.title)
+            self.password_input.setText(existingInfo.password)
+            self.url_input.setText(existingInfo.url)
 
         self.setLayout(layout)
 
@@ -88,7 +93,6 @@ class PasswordMenu(QDialog):
     def edit_password(self):
         # Add password logic here
         QMessageBox.information(self, "Success", "Password Successfully Edited")
-        self.clear_inputs()
         self.close()
 
     def exec(self) -> UserPasswordInfo:
@@ -99,6 +103,7 @@ class PasswordMenu(QDialog):
         where it returns value
         """
         super().exec()
+
         title = self.title_input.text()
         username = self.username_input.text()
         password = self.password_input.text()
