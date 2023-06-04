@@ -12,6 +12,8 @@ class MainMenu(QDialog):
         super().__init__()
         self.setWindowTitle("PASS VAULT")
         self.CreateTable()
+        # self.userInfos = []
+        
         '''
         for i in range(50):
             self.TableAddItem(
@@ -33,24 +35,43 @@ class MainMenu(QDialog):
             return
         else:
             self.TableAddItem(userPasswordInfo=userPasswordInfo, row = None)
+            # self.userInfos.append(userPasswordInfo)
 
         print("Getting: ")
         print(userPasswordInfo.__dict__)
     
-    def onEditPassword(self, existInfo: UserPasswordInfo, row: int):
+    def onEditPassword(self):
         print("Editing Password")
+        button = self.sender()
+        if button is not None:
+            row = self.table.indexAt(button.parent().pos()).row()
+            # existInfo = self.userInfos[row]
+            userPasswordInfo = PasswordMenu(passwordMenuType=PasswordMenuType.EDIT).exec()
+            if userPasswordInfo is None:
+                print("User Password info None")
+                return
+            else:
+                # self.userInfos[row] = userPasswordInfo
+                self.TableAddItem(userPasswordInfo=userPasswordInfo, row=row)
 
-        userPasswordInfo = PasswordMenu(passwordMenuType=PasswordMenuType.EDIT, existingInfo=existInfo).exec()
-        if userPasswordInfo is None:
-            print("User Password info None")
-            return
-        else:
-            self.TableAddItem(userPasswordInfo=userPasswordInfo, row=row)
+    def onDeletePassword(self):
+        print("Deleting Password")
+        button = self.sender()
+        if button is not None:
+            row = self.table.indexAt(button.parent().pos()).row()
 
-        print("Getting: ")
-        print(userPasswordInfo.__dict__)
+            if row >= 0 and row < self.table.rowCount():
+            # Remove the cell widget (buttons) in the row
+                viewEditDeleteButton = self.table.cellWidget(row, 2)
+                if viewEditDeleteButton is not None:
+                    self.table.removeCellWidget(row, 2)
+                    viewEditDeleteButton.deleteLater()
 
-    
+            # Remove the row items
+                self.table.removeRow(row)
+                # self.userInfos.pop(row)
+
+            
 
     def CreateTable(self):
         self.resize(1000, 500)
@@ -108,7 +129,12 @@ class MainMenu(QDialog):
         View = QPushButton("View")
         Edit = QPushButton("Edit")
         Delete = QPushButton("Delete")
-        Edit.clicked.connect(lambda _, info=userPasswordInfo, row=newRowIndex: self.onEditPassword(info, row))
+        # Create a partial function to capture the current row index
+        onEditClicked = lambda _: self.onEditPassword()
+        onDeleteClicked = lambda _: self.onDeletePassword()
+
+        Edit.clicked.connect(onEditClicked)
+        Delete.clicked.connect(onDeleteClicked)
         buttonLayout.addWidget(View)
         buttonLayout.addWidget(Edit)
         buttonLayout.addWidget(Delete)

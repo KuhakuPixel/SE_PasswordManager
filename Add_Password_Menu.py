@@ -27,9 +27,9 @@ class PasswordMenuType(Enum):
 class PasswordMenu(QDialog):
     RANDOM_PASSWORD_LENGTH = 20
 
-    def __init__(self, passwordMenuType: PasswordMenuType, existingInfo: UserPasswordInfo = None):
+    def __init__(self, passwordMenuType: PasswordMenuType):
         super().__init__()
-        self.existingInfo = existingInfo
+        # self.existingInfo = existingInfo
         self.passwordMenuType = passwordMenuType
         self.setWindowTitle("Password Menu")
 
@@ -76,10 +76,14 @@ class PasswordMenu(QDialog):
 
         if passwordMenuType == PasswordMenuType.EDIT:
             layout.addWidget(self.edit_button)
-            self.title_input.setText(existingInfo.title)
-            self.username_input.setText(existingInfo.title)
-            self.password_input.setText(existingInfo.password)
-            self.url_input.setText(existingInfo.url)
+            # self.title_input.setText(existingInfo.title)
+            # self.username_input.setText(existingInfo.username)
+            # self.password_input.setText(existingInfo.password)
+            # self.url_input.setText(existingInfo.url)
+            # dikomen karena existing info bermasalah waktu ada beberapa row didelete, tepatnya
+            # button edit nya terkonek sm existingInfo row original waktu inisiasi add tabel
+            # karena userPasswordInfonya gk semuanya(password, url) distore per row table
+            # jd UserData.py addedUserPasswordArr hrus diintergrasi dl kalo mau automatic fill in
 
         self.setLayout(layout)
 
