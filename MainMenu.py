@@ -38,6 +38,13 @@ class MainMenu(QDialog):
         print("Getting: ")
         print(userPasswordInfo.__dict__)
     
+    def onViewPassword(self, userPasswordInfo: UserPasswordInfo):
+        messageBox = QMessageBox()
+        messageBox.setWindowTitle("View Content")
+        dictionary_contents = userPasswordInfo.__dict__
+        messageBox.setText(f"{dictionary_contents}")
+        messageBox.exec()
+
     def onEditPassword(self, existInfo : UserPasswordInfo):
         print("Editing Password")
         button = self.sender()
@@ -65,8 +72,6 @@ class MainMenu(QDialog):
 
             # Remove the row items
                 self.table.removeRow(row)
-
-            
 
     def CreateTable(self):
         self.resize(1000, 500)
@@ -125,9 +130,11 @@ class MainMenu(QDialog):
         Edit = QPushButton("Edit")
         Delete = QPushButton("Delete")
         # Create a partial function to capture the current row index
+        onViewClicked = lambda _: self.onViewPassword(userPasswordInfo)
         onEditClicked = lambda _: self.onEditPassword(userPasswordInfo)
         onDeleteClicked = lambda _: self.onDeletePassword()
 
+        View.clicked.connect(onViewClicked)
         Edit.clicked.connect(onEditClicked)
         Delete.clicked.connect(onDeleteClicked)
         buttonLayout.addWidget(View)
