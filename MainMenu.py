@@ -5,6 +5,7 @@ from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
 from Add_Password_Menu import PasswordMenuType, PasswordMenu
 from UserData import UserPasswordInfo
+from ViewPasswordDialog import ViewPasswordDialog
 
 
 class MainMenu(QDialog):
@@ -39,11 +40,15 @@ class MainMenu(QDialog):
         print(userPasswordInfo.__dict__)
     
     def onViewPassword(self, userPasswordInfo: UserPasswordInfo):
+        viewPasswordDialog = ViewPasswordDialog(userPasswordInfo=userPasswordInfo)
+        viewPasswordDialog.exec()
+        """
         messageBox = QMessageBox()
         messageBox.setWindowTitle("View Content")
         dictionary_contents = userPasswordInfo.__dict__
         messageBox.setText(f"{dictionary_contents}")
         messageBox.exec()
+        """
 
     def onEditPassword(self, existInfo : UserPasswordInfo):
         print("Editing Password")
