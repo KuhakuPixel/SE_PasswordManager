@@ -12,7 +12,6 @@ class MainMenu(QDialog):
         super().__init__()
         self.setWindowTitle("PASS VAULT")
         self.CreateTable()
-        # self.userInfos = []
         
         '''
         for i in range(50):
@@ -35,23 +34,20 @@ class MainMenu(QDialog):
             return
         else:
             self.TableAddItem(userPasswordInfo=userPasswordInfo, row = None)
-            # self.userInfos.append(userPasswordInfo)
 
         print("Getting: ")
         print(userPasswordInfo.__dict__)
     
-    def onEditPassword(self):
+    def onEditPassword(self, existInfo : UserPasswordInfo):
         print("Editing Password")
         button = self.sender()
         if button is not None:
             row = self.table.indexAt(button.parent().pos()).row()
-            # existInfo = self.userInfos[row]
-            userPasswordInfo = PasswordMenu(passwordMenuType=PasswordMenuType.EDIT).exec()
+            userPasswordInfo = PasswordMenu(passwordMenuType=PasswordMenuType.EDIT, existingInfo=existInfo).exec()
             if userPasswordInfo is None:
                 print("User Password info None")
                 return
             else:
-                # self.userInfos[row] = userPasswordInfo
                 self.TableAddItem(userPasswordInfo=userPasswordInfo, row=row)
 
     def onDeletePassword(self):
@@ -69,7 +65,6 @@ class MainMenu(QDialog):
 
             # Remove the row items
                 self.table.removeRow(row)
-                # self.userInfos.pop(row)
 
             
 
@@ -130,7 +125,7 @@ class MainMenu(QDialog):
         Edit = QPushButton("Edit")
         Delete = QPushButton("Delete")
         # Create a partial function to capture the current row index
-        onEditClicked = lambda _: self.onEditPassword()
+        onEditClicked = lambda _: self.onEditPassword(userPasswordInfo)
         onDeleteClicked = lambda _: self.onDeletePassword()
 
         Edit.clicked.connect(onEditClicked)
