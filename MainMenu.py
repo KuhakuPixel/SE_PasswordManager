@@ -8,6 +8,7 @@ from UserData import UserPasswordInfo
 from ViewPasswordDialog import ViewPasswordDialog
 
 
+
 class MainMenu(QDialog):
     def __init__(self):
         super().__init__()
@@ -23,6 +24,7 @@ class MainMenu(QDialog):
                     username="MyUsername",
                     password="Nooobbb",
                 ),
+                row= i
             )
         '''
 
@@ -80,17 +82,63 @@ class MainMenu(QDialog):
 
     def CreateTable(self):
         self.resize(1000, 500)
-        self.AddPassword = QPushButton("Add Password")
+        self.HeaderLogo = QLabel()
+        logoPixmap = QPixmap("./assets/Logo.png")
+        self.HeaderLogo.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.HeaderLogo.setStyleSheet("background-color: #ffffff")
+        self.HeaderLogo.setPixmap(logoPixmap.scaledToWidth(150))
+        self.AddPassword = QPushButton()
         self.AddPassword.clicked.connect(self.onAddPassword)
-        self.SettingButton = QPushButton("Setting")
-        self.Premium = QPushButton("Premium")
+        self.SettingButton = QPushButton()
+        self.Premium = QPushButton()
+
+        self.AddPassword.setFixedSize(20, 20)
+        self.AddPassword.setStyleSheet(
+            """
+            QPushButton {
+                border-image: url(./assets/AddButton.png);
+                background-color: transparent;
+            }
+            """
+        )
+        self.SettingButton.setFixedSize(20,20)
+        self.SettingButton.setStyleSheet("border-image : url(./assets/SettingButton.png);")
+        self.Premium.setFixedSize(20,20)
+        self.Premium.setStyleSheet("border-image : url(./assets/PremiumButton.png);")
 
         self.Search = QLineEdit()
+        self.Search.setStyleSheet(
+            """
+            border: 2px groove #202020;
+            border-radius: 7px;
+            background-color: #ffffff;
+            color: #9c9c9c;
+            height: 15px;
+            padding: 2px;
+            """
+        )
         self.Search.setPlaceholderText("Search Password....")
+        # search icon
+        searchIcon = QIcon("./assets/Search.png")
+        searchIcon.addPixmap(searchIcon.pixmap(QSize(5, 5)).scaled(5, 5), QIcon.Mode.Active, QIcon.State.On)
+        searchAction = QAction(searchIcon, "", self.Search)
+        
+        self.Search.addAction(searchAction, QLineEdit.ActionPosition.LeadingPosition)
+
+        # Create a layout for the search components
+        searchLayout = QHBoxLayout()
+        searchLayout.addWidget(self.Search)
+        searchLayout.setContentsMargins(400,0,0,0)
+
+        # Adjust the size of the search icon
+        # searchAction.setIcon(searchIcon)
+
+        # Adjust the padding to make room for the search icon/
 
         self.table = QTableWidget()
         self.header_labels = ["Title", "Username", " "]
         self.table.setColumnCount(3)
+        self.table.setColumnWidth(2,100)
         self.table.setHorizontalHeaderLabels(self.header_labels)
 
         self.table.setShowGrid(False)
@@ -101,19 +149,29 @@ class MainMenu(QDialog):
         self.table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Fixed)
         self.table.verticalHeader().setDefaultSectionSize(50)
         # ===============================================
-        self.table.horizontalHeader().setSectionResizeMode(
-            QHeaderView.ResizeMode.Stretch
-        )
+        # self.table.horizontalHeader().setDefaultSectionSize(460)
+        self.table.horizontalHeader().setSectionResizeMode(0,QHeaderView.ResizeMode.Stretch)
+        self.table.horizontalHeader().setSectionResizeMode(1,QHeaderView.ResizeMode.Stretch)
+        self.table.horizontalHeader().setDefaultSectionSize(250)
 
         self.vBox = QVBoxLayout()
         self.hBox = QHBoxLayout()
+        self.hBox.setSpacing(20)
+        self.hBox.setContentsMargins(50,10,50,10)
         self.hBox.addWidget(self.AddPassword)
         self.hBox.addWidget(self.SettingButton)
         self.hBox.addWidget(self.Premium)
-        self.hBox.addWidget(self.Search)
-        self.vBox.addLayout(self.hBox)
+        self.hBox.addLayout(searchLayout)
+
+        frame = QFrame()
+        frame.setStyleSheet("background-color: #7286D3;")
+        frame.setLayout(self.hBox)
+
+        self.vBox.addWidget(self.HeaderLogo)
+        self.vBox.addWidget(frame)
         self.vBox.addWidget(self.table)
         self.setLayout(self.vBox)
+
 
     def TableAddItem(self, userPasswordInfo: UserPasswordInfo, row):
         if row is not None and row < self.table.rowCount():
@@ -130,10 +188,50 @@ class MainMenu(QDialog):
 
         # ============= view,edit, delete button ============
         viewEditDeleteButton = QWidget()
+        # viewEditDeleteButton.setGeometry(0,0,300,100)
         buttonLayout = QHBoxLayout(viewEditDeleteButton)
-        View = QPushButton("View")
-        Edit = QPushButton("Edit")
-        Delete = QPushButton("Delete")
+        buttonLayout.setContentsMargins(50,0,50,0)
+        # buttonLayout.minimumSize(20)
+        buttonLayout.setSpacing(10)
+    
+        View = QPushButton()
+        Edit = QPushButton()
+        Delete = QPushButton()
+        
+        View.setFixedSize(45, 35)
+        View.setStyleSheet(
+            """
+            QPushButton {
+                border-image: url(./assets/ViewButton.png);
+            }
+            QPushButton:hover {
+                border-image: url(./assets/InvertedViewButton.png);
+            }
+            """
+        )
+        #kalo ada ide hover yg lebih bagus ganti aja
+        Edit.setFixedSize(45,35)
+        Edit.setStyleSheet(
+            """
+            QPushButton {
+                border-image: url(./assets/EditButton.png);
+            }
+            QPushButton:hover {
+                border-image: url(./assets/InvertedEditButton.png);
+            }
+            """
+        )
+        Delete.setFixedSize(45,35)
+        Delete.setStyleSheet(
+            """
+            QPushButton {
+                border-image: url(./assets/DeleteButton.png);
+            }
+            QPushButton:hover {
+                border-image: url(./assets/InvertedDeleteButton.png);
+            }
+            """
+        )
         # Create a partial function to capture the current row index
         onViewClicked = lambda _: self.onViewPassword(userPasswordInfo)
         onEditClicked = lambda _: self.onEditPassword(userPasswordInfo)
@@ -145,6 +243,7 @@ class MainMenu(QDialog):
         buttonLayout.addWidget(View)
         buttonLayout.addWidget(Edit)
         buttonLayout.addWidget(Delete)
+        
         # add information
         self.table.setItem(newRowIndex, 0, QTableWidgetItem(userPasswordInfo.title))
         self.table.setItem(newRowIndex, 1, QTableWidgetItem(userPasswordInfo.username))
