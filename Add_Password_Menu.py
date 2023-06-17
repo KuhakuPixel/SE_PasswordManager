@@ -120,8 +120,12 @@ class PasswordMenu(QDialog):
 
     def edit_password(self):
         # Add password logic here
-        QMessageBox.information(self, "Success", "Password Successfully Edited")
-        self.close()
+
+        if self.is_valid_input():
+            QMessageBox.information(self, "Success", "Password Successfully Edited")
+            self.close()
+        else:
+            QMessageBox.warning(self, "Invalid Input", "Please fill in all fields.")
     
 
     def exec(self) -> UserPasswordInfo:
