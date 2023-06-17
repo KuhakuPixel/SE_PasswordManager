@@ -6,6 +6,7 @@ from PyQt6.QtWidgets import *
 from Add_Password_Menu import PasswordMenuType, PasswordMenu
 from UserData import UserPasswordInfo
 from ViewPasswordDialog import ViewPasswordDialog
+from util import is_email_valid
 
 
 
@@ -30,16 +31,12 @@ class MainMenu(QDialog):
 
     def onAddPassword(self):
         print("Adding Password")
-        
         userPasswordInfo = PasswordMenu(passwordMenuType=PasswordMenuType.ADD).exec()
         if userPasswordInfo == None:
             print("User Password info None")
             return
         else:
             self.TableAddItem(userPasswordInfo=userPasswordInfo, row = None)
-
-        print("Getting: ")
-        print(userPasswordInfo.__dict__)
     
     def onViewPassword(self, userPasswordInfo: UserPasswordInfo):
         viewPasswordDialog = ViewPasswordDialog(userPasswordInfo=userPasswordInfo)
@@ -58,6 +55,7 @@ class MainMenu(QDialog):
         if button is not None:
             row = self.table.indexAt(button.parent().pos()).row()
             userPasswordInfo = PasswordMenu(passwordMenuType=PasswordMenuType.EDIT, existingInfo=existInfo).exec()
+
             if userPasswordInfo is None:
                 print("User Password info None")
                 return

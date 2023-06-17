@@ -83,27 +83,7 @@ class PasswordMenu(QDialog):
 
         self.setLayout(layout)
 
-    def add_password(self):
-        # Add password logic here
-        QMessageBox.information(
-            self, "Password Successfully Added", "Password has been added successfully."
-        )
-        self.close()
-
-    def edit_password(self):
-        # Add password logic here
-        QMessageBox.information(self, "Success", "Password Successfully Edited")
-        self.close()
-
-    def exec(self) -> UserPasswordInfo:
-        """
-        will return the value after dialog is closed
-        this basically override Dialog.exec() ?
-        I use similliar method like QMessageBox.exec()
-        where it returns value
-        """
-        super().exec()
-
+    def get_UserPasswordInfo(self):
         title = self.title_input.text()
         username = self.username_input.text()
         password = self.password_input.text()
@@ -119,6 +99,40 @@ class PasswordMenu(QDialog):
                 url=url,
                 username=username,
             )
+    def is_valid_input(self):
+        if self.get_UserPasswordInfo() == None:
+            return False
+        else:
+            return True
+
+    def add_password(self):
+        """
+        # Add password logic here
+        """
+        if self.is_valid_input():
+            QMessageBox.information(
+                self, "Password Successfully Added", "Password has been added successfully."
+            )
+            self.close()
+        else:
+            QMessageBox.warning(self, "Invalid Input", "Please fill in all fields.")
+
+
+    def edit_password(self):
+        # Add password logic here
+        QMessageBox.information(self, "Success", "Password Successfully Edited")
+        self.close()
+    
+
+    def exec(self) -> UserPasswordInfo:
+        """
+        will return the value after dialog is closed
+        this basically override Dialog.exec() ?
+        I use similliar method like QMessageBox.exec()
+        where it returns value
+        """
+        super().exec()
+        return self.get_UserPasswordInfo()
 
     def generate_password(self):
         self.password_input.setText("Generated")

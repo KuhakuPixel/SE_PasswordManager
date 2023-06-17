@@ -1,0 +1,6 @@
+- view :(Mario)
+- Edit
+- delete
+- AddPassword Validation (Vanessa)
+- Encryption/decryption (Gabriel)
+
